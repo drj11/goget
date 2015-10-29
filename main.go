@@ -2,15 +2,28 @@ package main
 
 import (
 	"crypto/sha256"
+	"flag"
 	"fmt"
 	"hash"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 )
 
+var flagSHA256 = flag.String("sha256", "",
+	"SHA-256 from the SHA-2 standard (as hexstring)")
+
+var sha256RE = regexp.MustCompile("[[:xdigit:]]{64}")
+
 func main() {
+	flag.Parse()
+
+	if !sha256RE.MatchString(*flagSHA256) {
+		log.Fatalf("-sha256 \"%v\" should be a SHA-256 hexadecimal string", *flagSHA256)
+	}
+
 	resp, err := http.Get("http://golang.org/")
 	if err != nil {
 		log.Fatal(err)

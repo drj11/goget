@@ -4,6 +4,10 @@
 internet and write it to disk, having verified via a
 user-supplied checksum that it is the right file.
 
+```
+goget -sha256 64_hexdigit_sha256sum URL
+```
+
 ## Caution
 
 It's not fully implemented yet.
