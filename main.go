@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"flag"
 	"fmt"
-	"hash"
 	"io"
 	"log"
 	"net/http"
@@ -29,42 +28,19 @@ func main() {
 		log.Fatal(err)
 	}
 
-	summer, ch := checksummer(resp.Body)
+	h := sha256.New()
+	// We know from https://golang.org/pkg/hash/#Hash
+	// that tee-ing to the hash "never returns an error".
+	body := io.TeeReader(resp.Body, h)
 
-	_, err = io.Copy(os.Stdout, summer)
+	_, err = io.Copy(os.Stdout, body)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	b := <-ch
+	b := h.Sum([]byte{})
 	for i := range b {
 		fmt.Fprintf(os.Stderr, "%02x", b[i])
 	}
 	fmt.Fprint(os.Stderr, "\n")
-}
-
-type Summer struct {
-	src io.Reader
-	h   hash.Hash
-	c   chan<- []byte
-}
-
-func (r *Summer) Read(p []byte) (int, error) {
-	n, err := r.src.Read(p)
-	// From https://golang.org/pkg/hash/#Hash
-	// "It never returns an error"
-	_, _ = r.h.Write(p[:n])
-	b := r.h.Sum([]byte{})
-	if err == io.EOF {
-		go func() {
-			r.c <- b
-		}()
-	}
-	return n, err
-}
-
-func checksummer(src io.Reader) (io.Reader, <-chan []byte) {
-	ch := make(chan []byte)
-	s := Summer{src, sha256.New(), ch}
-	return &s, ch
 }
