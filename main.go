@@ -27,7 +27,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	resp, err := http.Get("http://golang.org/")
+	source := flag.Arg(0)
+
+	resp, err := http.Get(source)
 	if err != nil {
 		log.Fatal(err)
 	}
