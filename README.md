@@ -1,16 +1,17 @@
 # goget
 
+```
+goget --sha256 64_hexdigit_sha256sum URL
+```
+
 `goget` is designed to do just one thing: get a file from the
-internet and write it to disk, having verified via a
-user-supplied checksum that it is the right file.
+internet and write it to disk. The file is only written to the
+output destination when the SHA-256 checksum has been verified.
 
-```
-goget -sha256 64_hexdigit_sha256sum URL
-```
-
-## Caution
-
-It's not fully implemented yet.
+`goget` will only exit successfully (with 0 exit code) if the
+file has been downloaded from the URL given, it's SHA-256
+checksum matches, and the temporary file used during download
+has been successfully renamed to the final target.
 
 ## Why not use curl?
 
