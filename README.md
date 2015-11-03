@@ -1,12 +1,12 @@
 # goget
 
 ```
-goget --sha256 64_hexdigit_sha256sum URL
+goget --out destination-path --sha256 64_hexdigit_sha256sum URL
 ```
 
 `goget` is designed to do just one thing: get a file from the
 internet and write it to disk. The file is only written to the
-output destination when the SHA-256 checksum has been verified.
+destination-path when the SHA-256 checksum has been verified.
 
 `goget` will only exit successfully (with 0 exit code) if the
 file has been downloaded from the URL given, it's SHA-256
