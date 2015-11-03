@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"regexp"
 )
 
 var flagOut = flag.String("out", "./goget.out",
@@ -19,14 +18,8 @@ var flagOut = flag.String("out", "./goget.out",
 var flagSHA256 = flag.String("sha256", "",
 	"expected SHA-256 (hex) of file")
 
-var sha256RE = regexp.MustCompile("[[:xdigit:]]{64}")
-
 func main() {
 	flag.Parse()
-
-	if !sha256RE.MatchString(*flagSHA256) {
-		log.Fatalf("-sha256 \"%v\" should be a SHA-256 hexadecimal string", *flagSHA256)
-	}
 
 	outDir, outBase := path.Split(*flagOut)
 	out, err := ioutil.TempFile(outDir, outBase)
