@@ -17,7 +17,7 @@ import (
 var flagOut = flag.String("out", "./goget.out",
 	"pathname of output file")
 var flagSHA256 = flag.String("sha256", "",
-	"SHA-256 from the SHA-2 standard (as hexstring)")
+	"expected SHA-256 (hex) of file")
 
 var sha256RE = regexp.MustCompile("[[:xdigit:]]{64}")
 
